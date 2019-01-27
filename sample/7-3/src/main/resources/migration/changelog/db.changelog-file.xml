@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+		xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+		xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+	<changeSet author="uesako" id="file-001">
+		<preConditions onFail="MARK_RAN" onFailMessage="skip file-001">
+			<not>
+				<tableExists tableName="files" />
+			</not>
+		</preConditions>
+		<createTable tableName="files">
+			<column autoIncrement="true" name="id" type="INT">
+				<constraints primaryKey="true" />
+			</column>
+			<column type="INT" name="task_id">
+				<constraints nullable="false" />
+			</column>
+			<column type="varchar(255)" name="name">
+				<constraints nullable="false" />
+			</column>
+			<column type="varchar(1024)" name="s3_object">
+				<constraints nullable="false" />
+			</column>
+			<column type="timestamp" name="created" defaultValueComputed="CURRENT_TIMESTAMP">
+				<constraints nullable="false" />
+			</column>
+			<column type="timestamp" name="updated"
+				defaultValueComputed="CURRENT_TIMESTAMP" />
+		</createTable>
+	</changeSet>
+
+</databaseChangeLog>

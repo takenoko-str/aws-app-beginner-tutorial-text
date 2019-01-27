@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+		xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+		xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+	<changeSet author="mikami" id="reminder-001">
+		<preConditions onFail="MARK_RAN" onFailMessage="skip reminder-001">
+			<not>
+				<tableExists tableName="reminder" />
+			</not>
+		</preConditions>
+		<createTable tableName="reminder">
+			<column autoIncrement="true" name="id" type="INT">
+				<constraints primaryKey="true" />
+			</column>
+			<column type="varchar(255)" name="email">
+				<constraints nullable="false" />
+			</column>
+			<column type="bit(1)" name="sent">
+				<constraints nullable="false" />
+			</column>
+			<column type="timestamp" name="created" defaultValueComputed="CURRENT_TIMESTAMP">
+				<constraints nullable="false" />
+			</column>
+			<column type="timestamp" name="exec_date" />
+		</createTable>
+	</changeSet>
+
+	<changeSet author="mikami" id="reminder-002">
+		<preConditions onFail="MARK_RAN" onFailMessage="skip reminder-002">
+			<tableExists tableName="reminder" />
+			<not>
+				<columnExists tableName="reminder" columnName="task_id"/>
+			</not>
+		</preConditions>
+		<addColumn tableName="reminder">
+			<column name="task_id" type="INT">
+				<constraints nullable="false"/>
+			</column>
+		</addColumn>
+	</changeSet>
+
+	<changeSet author="mikami" id="reminder-003">
+		<preConditions onFail="MARK_RAN" onFailMessage="skip reminder-003">
+			<tableExists tableName="reminder" />
+			<tableExists tableName="tasks" />
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="fk_reminder_task_id" foreignKeyTableName="reminder"/>
+			</not>
+		</preConditions>
+		<addForeignKeyConstraint baseColumnNames="task_id"
+								 baseTableName="reminder" constraintName="fk_reminder_task_id"
+								 deferrable="false" initiallyDeferred="false" onDelete="CASCADE"
+								 onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="tasks" />
+	</changeSet>
+
+</databaseChangeLog>
